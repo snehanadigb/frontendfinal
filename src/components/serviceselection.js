@@ -6,8 +6,8 @@ const ServiceSelection = () => {
   const [serviceName, setServiceName] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
-  const customerId = new URLSearchParams(location.search).get('customerId');
-
+  //const customerId = new URLSearchParams(location.search).get('customerId');
+  const customerId = localStorage.getItem('customerId');
   const handleChange = (e) => {
     setServiceName(e.target.value);
   };
@@ -16,17 +16,18 @@ const ServiceSelection = () => {
     e.preventDefault();
 
     try {
-      await axios.post('http://localhost:5003/services/select-service', {
+        //console.log(customerId);
+      await axios.post('http://localhost:5004/services/select-service', {
         serviceName,
         customerId
       }, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+        // headers: {
+        //   'Authorization': `Bearer ${localStorage.getItem('token')}`
+        // }
       });
 
       alert('Service selected and activation in progress.');
-      navigate(`/customer-dashboard?customerId=${customerId}`);
+      navigate('/confirm');
     } catch (error) {
       alert('Service selection failed. Please try again.');
     }

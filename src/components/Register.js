@@ -24,6 +24,8 @@ const Registration = () => {
         address
       });
       if (response.status === 201) {
+        localStorage.setItem('customerId', response.data.customerId)
+        
         setStage('verify');
       }
     } catch (error) {
@@ -41,6 +43,7 @@ const Registration = () => {
       });
       if (response.status === 200) {
         alert('Email verified successfully!');
+        localStorage.setItem('customerId', response.data.customerId)
         // Redirect to document upload page
         window.location.href = '/upload-documents'; // Update this path as needed
       }

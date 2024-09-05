@@ -6,7 +6,7 @@ const DocumentUpload = () => {
   const [file, setFile] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
-  const customerId = new URLSearchParams(location.search).get('customerId');
+  const customerId = localStorage.getItem('customerId');
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);

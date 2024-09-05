@@ -9,7 +9,7 @@ const LandingPage = () => {
   };
 
   const handleAdminClick = () => {
-    navigate('/admin-dashboard');
+    navigate('/admin-login');
   };
 
   return (
