@@ -1,15 +1,28 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import './DocumentUpload.css'; // Import the updated CSS file
+import logo from './Copy of T.png'; // Import the logo for IndiTel
 
 const DocumentUpload = () => {
   const [file, setFile] = useState(null);
-  const location = useLocation();
+  const [filePreviewUrl, setFilePreviewUrl] = useState(null);
+  const [verificationStatus, setVerificationStatus] = useState('');
   const navigate = useNavigate();
   const customerId = localStorage.getItem('customerId');
+  const token = localStorage.getItem('authToken');
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    const selectedFile = e.target.files[0];
+    
+    if (selectedFile && selectedFile.type.startsWith('image/')) {
+      setFile(selectedFile);
+      setFilePreviewUrl(URL.createObjectURL(selectedFile));
+    } else {
+      setFile(null);
+      setFilePreviewUrl(null);
+      alert('Please select a valid image file (PNG, JPEG, etc.)');
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -21,29 +34,70 @@ const DocumentUpload = () => {
     }
 
     const formData = new FormData();
-    formData.append('document', file); // Ensure this matches the backend field name
-
+    formData.append('document', file);
     try {
-      await axios.post('http://localhost:5004/documents/upload', formData, {
+      const response = await axios.post('http://localhost:5004/documents/upload', formData, {
         headers: {
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'
         },
-        params: { customerId }
+        params: { customerId }  // Send customer ID with request
       });
-      alert('Document uploaded successfully. Awaiting verification.');
-      navigate(`/select-service?customerId=${customerId}`);
+
+      setVerificationStatus(response.data.verificationStatus);
+
+      if (response.data.verificationStatus === 'verified') {
+        alert('Document Verified Successfully');
+        navigate('/select-service');
+      } else {
+        alert('Verification failed. Please try again.');
+      }
     } catch (error) {
       console.error('Error during document upload:', error);
-      alert('Document upload failed. Please try again.');
+      alert('Document verification failed. Please try again.');
     }
   };
 
+  const handleHomeClick = () => {
+    navigate('/landing-page');
+  };
+
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Upload Document</h2>
-      <input type="file" onChange={handleFileChange} required />
-      <button type="submit">Upload</button>
-    </form>
+    <div className="document-upload-container">
+      <header className="document-upload-header">
+        <div className="logo">
+          <img src={logo} alt="IndiTel Logo" className="logo-image" />
+          <h1 className="company-name">Welcome to IndiTel</h1>
+        </div>
+        <button className="home-button" onClick={handleHomeClick}>
+          Home
+        </button>
+      </header>
+      <div className="upload-container">
+        <form className="upload-form" onSubmit={handleSubmit}>
+          <h2 className="upload-title">Upload Your Document</h2>
+          <div className="file-input-container">
+            <input
+              type="file"
+              className="file-input"
+              onChange={handleFileChange}
+              accept="image/*" // Restrict file types to images only
+              required
+            />
+          </div>
+          {/* File Preview */}
+          {filePreviewUrl && (
+            <div className="file-preview-container">
+              <h4>Preview:</h4>
+              <img src={filePreviewUrl} alt="File Preview" className="file-preview-image" />
+            </div>
+          )}
+          <button type="submit" className="upload-button">
+            Upload
+          </button>
+        </form>
+      </div>
+    </div>
   );
 };
 
