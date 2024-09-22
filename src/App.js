@@ -13,6 +13,11 @@ import CustomerDashboard from './components/customerdashboard';
 import AdminRegister from './components/adminregister';
 import ForgotPassword from './components/forgotPassword';
 import ResetPassword from './components/resetPassword';
+import AdminForgotPassword from './components/AdminForgotPass';
+import AdminResetPassword from './components/AdminResetPass';
+import ReportDownload from './components/pdfservice';
+import AdminReport from './components/adminreport';
+import AddPlan from './components/AddPlan';
 const App = () => {
   return (
     <Router>
@@ -32,6 +37,11 @@ const App = () => {
         <Route path="/customer-dashboard" element={<CustomerDashboard/>}/>
         <Route path="/admin-register" element={<AdminRegister/>}/>
         <Route path="/thank-you" element={<Thankyou/>}/>
+        <Route path="/admin-forgot" element={<AdminForgotPassword/>}/>
+        <Route path="/admin-reset" element={<AdminResetPassword/>}/>
+        <Route path="/pdf-service" element={<ReportDownload/>}/>
+        <Route path='/admin-report' element={<AdminReport/>}/>
+        <Route path="/add-plan" element={<AddPlan/>}/>
       </Routes>
     </Router>
   );

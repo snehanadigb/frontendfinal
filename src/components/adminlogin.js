@@ -48,9 +48,13 @@ const AdminLogin = () => {
     navigate('/admin-register');
   };
 
+  // Navigate to forgot password page
+  const goToForgotPassword = () => {
+    navigate('/admin-forgot');
+  };
+
   return (
     <div className="login-page">
-      {/* Header matching CustomerLogin */}
       <header className="login-header">
         <div className="logo">
           <img src={logo} alt="IndiTel Logo" className="logo-image" />
@@ -80,6 +84,7 @@ const AdminLogin = () => {
           <button type="submit" className="login-button">Login</button>
           {error && <p className="error-message">{error}</p>}
           {!formValid && <p className="error-message">Please enter valid details</p>}
+          <p className="forgot-password" onClick={goToForgotPassword}>Forgot Password?</p>
         </form>
         {/* <p className="register-link" onClick={goToRegister}>New admin? Register here</p> */}
       </main>

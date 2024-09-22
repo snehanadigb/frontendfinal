@@ -13,6 +13,7 @@ const ForgotPassword = () => {
       const response = await axios.post('http://localhost:5004/auth/forgot-password', {
         email,
       });
+      localStorage.setItem('email',email);
 
       if (response.status === 200) {
         setMessage('Password reset email sent. Please check your inbox.');

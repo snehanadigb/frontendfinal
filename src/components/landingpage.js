@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './landingpage.css';
 import logo from './Copy of T.png'; // Replace with your actual logo image path
@@ -7,8 +7,39 @@ import aboutImage from './two.jpeg'; // Replace with your actual About Us image 
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const [plans, setPlans] = useState([]);
+  const [filteredPlans, setFilteredPlans] = useState([]);
+  const [planType, setPlanType] = useState('All'); // State for selected plan type
 
-  const handleCustomerClick = () => {
+  // Fetch plans from the backend
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        const response = await fetch('http://localhost:5004/services/getplans'); // Adjust endpoint as necessary
+        const data = await response.json();
+        setPlans(data);
+        setFilteredPlans(data); // Initialize filtered plans
+      } catch (error) {
+        console.error('Error fetching plans:', error);
+      }
+    };
+
+    fetchPlans();
+  }, []);
+
+  // Update filtered plans based on selected type
+  useEffect(() => {
+    if (planType === 'All') {
+      setFilteredPlans(plans);
+    } else {
+      setFilteredPlans(plans.filter(plan => plan.planType === planType));
+    }
+  }, [planType, plans]);
+  const handleCustomerClick = (planId) => {
+    // Store the selected plan ID in localStorage or state
+    localStorage.setItem('selectedPlanId', planId);
+  
+    // Navigate to the registration page
     navigate('/register');
   };
 
@@ -63,23 +94,43 @@ const LandingPage = () => {
 
       {/* Services Section */}
       <section id="services-section" className="services-section">
-        <h2>Our Services</h2>
+        <h2>Our Plans</h2>
+
+        {/* Dropdown for selecting plan type */}
+        <select value={planType} onChange={(e) => setPlanType(e.target.value)}>
+          <option value="All">All</option>
+          <option value="Prepaid">Prepaid</option>
+          <option value="Postpaid">Postpaid</option>
+        </select>
+
         <div className="catalog">
-          <div className="catalog-item">
-            <h3>Mobile Plans</h3>
-            <p>Choose from a variety of prepaid and postpaid plans that suit your needs.</p>
-            <button onClick={handleCustomerClick}>Register</button>
-          </div>
-          <div className="catalog-item">
-            <h3>Broadband Services</h3>
-            <p>High-speed broadband services for homes and businesses.</p>
-            <button onClick={handleCustomerClick}>Register</button>
-          </div>
-          <div className="catalog-item">
-            <h3>Enterprise Solutions</h3>
-            <p>Tailored communication solutions for businesses to stay connected.</p>
-            <button onClick={handleCustomerClick}>Register</button>
-          </div>
+          {filteredPlans.length > 0 ? (
+            filteredPlans.map((plan) => (
+              <div className="catalog-item card" key={plan.id}>
+                <h3>{plan.name}</h3>
+                <p>{plan.description}</p>
+                <p>Price: ₹{plan.price}</p>
+                <div className="services-included">
+                  {plan.servicesIncluded?.fiberLandline && (
+                    <div>
+                      <h4>Fiber + Landline</h4>
+                      <p>{plan.servicesIncluded.fiberLandline.speed}</p>
+                      <p>{plan.servicesIncluded.fiberLandline.calls}</p>
+                    </div>
+                  )}
+                  {plan.servicesIncluded?.dth && (
+                    <div>
+                      <h4>DTH</h4>
+                      <p>{plan.servicesIncluded.dth.value}</p>
+                    </div>
+                  )}
+                </div>
+                <button onClick={() => handleCustomerClick(plan.id)}>Register</button>
+              </div>
+            ))
+          ) : (
+            <p>No plans available</p>
+          )}
         </div>
       </section>
 

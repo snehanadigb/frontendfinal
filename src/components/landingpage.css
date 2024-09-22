@@ -255,3 +255,117 @@
 .footer-column p {
     margin: 5px 0;
 }
+/* Add card-specific styles */
+/* General Styling for Catalog Section */
+.catalog {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .catalog-item.card {
+    background-color: #ffffff; /* White background for a clean look */
+    border-radius: 15px;
+    padding: 30px;
+    width: 300px;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-top: 5px solid #1e90ff; /* A bold colored border for the top */
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .catalog-item.card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 300%;
+    height: 300%;
+    background-color: rgba(30, 144, 255, 0.1); /* Subtle background gradient */
+    transform: rotate(30deg);
+    transition: 0.5s;
+  }
+  
+  .catalog-item.card:hover::before {
+    left: 50%;
+    top: 50%;
+    width: 0;
+    height: 0;
+  }
+  
+  .catalog-item.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Card Header Styling */
+  .catalog-item.card h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #1e90ff; /* Accent color */
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  
+  /* Description */
+  .catalog-item.card p {
+    font-size: 1rem;
+    color: #333; /* Darker font color for readability */
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  
+  /* Services Included Section */
+  .services-included {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #ddd; /* Separating section */
+  }
+  
+  .services-included h4 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #1e90ff; /* Accent color */
+    margin-bottom: 5px;
+  }
+  
+  .services-included p {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 8px;
+  }
+  
+  /* Card Button */
+  .catalog-item.card button {
+    background-color: #1e90ff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px;
+    margin-top: 20px;
+    width: 100%;
+    transition: background-color 0.3s ease;
+  }
+  
+  .catalog-item.card button:hover {
+    background-color: #1c86ee;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .catalog {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .catalog-item.card {
+      width: 90%;
+    }
+  }
+  
