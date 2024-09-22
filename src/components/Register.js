@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import axios from 'axios';
 import './Registration.css';
@@ -14,6 +13,8 @@ const Registration = () => {
   const [otp, setOtp] = useState('');
   const [stage, setStage] = useState('register'); // 'register' or 'verify'
   const [error, setError] = useState('');
+  
+  const [step, setStep] = useState(1); // Step progress state
 
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const validatePhoneNo = (phone_no) => /^\d{10}$/.test(phone_no);
@@ -31,14 +32,12 @@ const Registration = () => {
       const response = await axios.post('http://localhost:5004/auth/register', { f_name, l_name, email, password, phone_no, address });
       const token = response.data.token;
 
-      // Save JWT token in localStorage or sessionStorage
-     
-    if (response.status === 201) {
-      localStorage.setItem('customerId', response.data.customerId)
-      localStorage.setItem('authToken', token);
-      console.log("hello");
-      setStage('verify');
-    }
+      if (response.status === 201) {
+        localStorage.setItem('customerId', response.data.customerId);
+        localStorage.setItem('authToken', token);
+        setStage('verify');
+        setStep(2); // Move to step 2 for OTP verification
+      }
     } catch (error) {
       setError('Registration failed. Please try again.');
       console.error('Error during registration:', error);
@@ -54,6 +53,7 @@ const Registration = () => {
       if (response.status === 200) {
         alert('Email verified successfully!');
         window.location.href = '/upload-documents'; // Redirect to document upload page
+        setStep(3); // Move to step 3 for document upload
       }
     } catch (error) {
       setError('OTP verification failed. Please try again.');
@@ -72,6 +72,13 @@ const Registration = () => {
       </header>
 
       <main className="registration-main">
+        <div className="progress-bar-wrapper">
+          <div className="progress-bar">
+            <div className="progress" style={{ width: `${(step / 4) * 100}%` }}></div>
+          </div>
+          <div className="step-label">Step {step} of 4</div>
+        </div>
+
         <form className="registration-form" onSubmit={stage === 'register' ? handleRegister : handleVerify}>
           <h2>{stage === 'register' ? 'Register' : 'Verify OTP'}</h2>
           {stage === 'register' ? (
