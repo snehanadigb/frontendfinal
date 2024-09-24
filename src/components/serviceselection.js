@@ -8,6 +8,7 @@ const ServiceSelection = () => {
   const [selectedPlanId, setSelectedPlanId] = useState(null);
   const [serviceType, setServiceType] = useState('All');
   const [plans, setPlans] = useState([]);
+  const [step, setStep] = useState(4)
   const [filteredPlans, setFilteredPlans] = useState([]);
   const navigate = useNavigate();
 
@@ -90,12 +91,18 @@ const ServiceSelection = () => {
           Home
         </button>
       </header>
+      <div className="progress-bar-wrapper">
+          <div className="progress-bar">
+            <div className="progress" style={{ width: `${(step / 4) * 100}%` }}></div>
+          </div>
+          <div className="step-label">Step {step} of 4</div>
+        </div>
 
       <h1 className="title">Telecom Services</h1>
 
       {/* Dropdown for filtering between Prepaid, Postpaid, and All */}
       <select
-        className="service-filter"
+        className="modern-select"
         value={serviceType}
         onChange={(e) => setServiceType(e.target.value)}
       >
